@@ -69,7 +69,7 @@ export default function BloodTypeCluster({ selectedType, onSelect }) {
   return (
     <div className="w-full h-full min-h-[300px] relative rounded-2xl overflow-hidden glass-panel">
       <div className="absolute top-4 left-4 z-10 bg-dark-900/70 border border-slate-700/50 px-3 py-1 rounded-full text-xs font-semibold text-slate-300">
-        3D Blood Matrix Filter: <span className="text-blood-500">{selectedType || 'All Types'}</span>
+        Blood Group Filter: <span className="text-blood-500">{selectedType || 'All Types'}</span>
       </div>
       <Canvas camera={{ position: [0, 0, 5.5], fov: 50 }}>
         <ambientLight intensity={0.7} />

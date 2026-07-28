@@ -126,7 +126,7 @@ export default function App() {
       <footer className="border-t border-white/5 bg-dark-950/80 py-6 px-4 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div>
-            <span className="font-bold text-slate-400">HemoVerse 3D</span> &copy; 2026. Empowering healthcare with real-time 3D telemetry.
+            <span className="font-bold text-slate-400">HemoVerse</span> &copy; 2026. Empowering healthcare with real-time blood logistics.
           </div>
           {currentUser && (
             <div className="flex items-center gap-4 text-slate-400">

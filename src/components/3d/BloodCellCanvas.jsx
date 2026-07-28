@@ -110,7 +110,7 @@ export default function BloodCellCanvas() {
     <div className="w-full h-full min-h-[350px] relative rounded-2xl overflow-hidden glass-panel">
       <div className="absolute top-4 left-4 z-10 bg-dark-900/60 backdrop-blur-md border border-blood-500/20 px-3 py-1.5 rounded-full text-xs font-medium text-blood-100 flex items-center gap-2">
         <span className="w-2 h-2 rounded-full bg-blood-500 animate-ping" />
-        Interactive 3D Erythrocyte Engine
+        Live Blood Cell Network
       </div>
       <Canvas
         camera={{ position: [0, 0, 6], fov: 45 }}

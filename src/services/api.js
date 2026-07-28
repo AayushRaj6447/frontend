@@ -5,6 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://hemoverse.onr
 const api = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: true,
+  timeout: 15000,
   headers: {
     'Accept': 'application/json'
   }
@@ -25,7 +26,9 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     let errorMessage = 'An unexpected error occurred';
-    if (error.response?.data) {
+    if (error.code === 'ECONNABORTED') {
+      errorMessage = 'Request timed out. Please check your internet connection or backend service.';
+    } else if (error.response?.data) {
       if (typeof error.response.data === 'string') {
         errorMessage = error.response.data;
       } else if (error.response.data.message) {

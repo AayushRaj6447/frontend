@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { HeartPulse, Plus, Search, Phone, Hospital, AlertCircle, ShieldAlert, Clock, Trash2, Edit3, X, FileText, CheckCircle } from 'lucide-react';
-import { addBloodRequestApi, editBloodRequestApi, removeBloodRequestApi, sendRequestOtpApi } from '../services/api';
+import { addBloodRequestApi, editBloodRequestApi, removeBloodRequestApi } from '../services/api';
 
 const URGENCY_LEVELS = ['All', 'Critical', 'High', 'Medium', 'Low'];
 
@@ -24,37 +24,15 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
     phoneNumber: '',
     aadharNumber: '',
     email: '',
-    otp: '',
     additionalNotes: '',
   });
-
-  const [sendingOtp, setSendingOtp] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
-
-  const handleSendRequestOtp = async () => {
-    if (!formData.email) {
-      setError('Please enter contact email first.');
-      return;
-    }
-    setError('');
-    setSendingOtp(true);
-    try {
-      await sendRequestOtpApi(formData.email);
-      showToast(`Request OTP sent to ${formData.email}!`, 'info');
-      setOtpSent(true);
-    } catch (err) {
-      setError(err.message || 'Failed to send OTP.');
-    } finally {
-      setSendingOtp(false);
-    }
-  };
 
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
     if (!currentUser) {
-      showToast('Please log in to submit a blood request.', 'error');
+      if (showToast) showToast('Please log in to submit a blood request.', 'error');
       return;
     }
 
@@ -72,7 +50,7 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
         additionalNotes: formData.additionalNotes || '',
       };
       await addBloodRequestApi(payload);
-      showToast('Blood Request published successfully!', 'success');
+      if (showToast) showToast('Blood Request published successfully!', 'success');
       setIsAddModalOpen(false);
       resetForm();
       onRefresh();
@@ -100,7 +78,7 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
         additionalNotes: formData.additionalNotes || '',
       };
       await editBloodRequestApi(editingRequest._id, payload);
-      showToast('Blood Request updated successfully!', 'success');
+      if (showToast) showToast('Blood Request updated successfully!', 'success');
       setEditingRequest(null);
       resetForm();
       onRefresh();
@@ -115,10 +93,10 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
     if (!window.confirm('Delete this blood request?')) return;
     try {
       await removeBloodRequestApi(requestId);
-      showToast('Blood request deleted.', 'success');
+      if (showToast) showToast('Blood request deleted.', 'success');
       onRefresh();
     } catch (err) {
-      showToast(err.message || 'Failed to delete request.', 'error');
+      if (showToast) showToast(err.message || 'Failed to delete request.', 'error');
     }
   };
 
@@ -176,10 +154,10 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
     <div className="space-y-6 animate-fade-in pb-12">
       
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 glass-panel p-6 rounded-3xl">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 glass-panel p-4 sm:p-6 rounded-2xl sm:rounded-3xl">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-100 flex items-center gap-2">
-            <HeartPulse className="w-6 h-6 text-blood-500" />
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-100 flex items-center gap-2">
+            <HeartPulse className="w-5 h-5 sm:w-6 sm:h-6 text-blood-500" />
             Emergency Blood Requests Hub
           </h1>
           <p className="text-xs text-slate-400 mt-1">
@@ -190,13 +168,13 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
         <button
           onClick={() => {
             if (!currentUser) {
-              showToast('Please log in to submit a request.', 'error');
+              if (showToast) showToast('Please log in to submit a request.', 'error');
               return;
             }
             resetForm();
             setIsAddModalOpen(true);
           }}
-          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blood-600 to-blood-500 hover:from-blood-500 text-white font-bold text-sm shadow-lg shadow-blood-950/80 flex items-center gap-2 transition-all transform active:scale-95 shrink-0"
+          className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-blood-600 to-blood-500 hover:from-blood-500 text-white font-bold text-sm shadow-lg shadow-blood-950/80 flex items-center justify-center gap-2 transition-all transform active:scale-95 shrink-0"
         >
           <Plus className="w-4 h-4" />
           Create Blood Request
@@ -204,7 +182,7 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
       </div>
 
       {/* Filter & Search */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="flex flex-col md:flex-row gap-3 sm:gap-4 items-center justify-between">
         
         {/* Search */}
         <div className="relative w-full md:w-80">
@@ -219,12 +197,12 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
         </div>
 
         {/* Urgency Filter Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
+        <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 max-w-full">
           {URGENCY_LEVELS.map((u) => (
             <button
               key={u}
               onClick={() => setSelectedUrgency(u)}
-              className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${
                 selectedUrgency === u
                   ? 'bg-blood-600 text-white shadow-md shadow-blood-950/60'
                   : 'glass-panel text-slate-400 hover:text-slate-200 hover:bg-white/5'
@@ -239,36 +217,36 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
 
       {/* Requests Grid */}
       {filteredRequests.length === 0 ? (
-        <div className="glass-panel p-12 rounded-3xl text-center text-slate-400">
+        <div className="glass-panel p-8 sm:p-12 rounded-3xl text-center text-slate-400">
           <AlertCircle className="w-10 h-10 mx-auto text-slate-500 mb-3" />
-          <p className="font-semibold">No blood requests match your filter.</p>
+          <p className="font-semibold text-sm sm:text-base">No blood requests match your filter.</p>
           <p className="text-xs text-slate-500 mt-1">Try changing search query or creating a request.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredRequests.map((req) => (
             <div
               key={req._id}
-              className="glass-panel rounded-3xl p-5 border border-white/10 hover:border-blood-500/40 transition-all flex flex-col justify-between group"
+              className="glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-white/10 hover:border-blood-500/40 transition-all flex flex-col justify-between group"
             >
               <div>
                 {/* Top Badge & Group */}
                 <div className="flex items-start justify-between gap-2 mb-3">
-                  <span className={`px-3 py-1 rounded-full border text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-sm ${getUrgencyBadge(req.urgency)}`}>
-                    <ShieldAlert className="w-3.5 h-3.5" />
-                    {req.urgency} Urgency
+                  <span className={`px-2.5 py-1 rounded-full border text-[11px] font-bold uppercase tracking-wider flex items-center gap-1 shadow-sm ${getUrgencyBadge(req.urgency)}`}>
+                    <ShieldAlert className="w-3 h-3" />
+                    {req.urgency}
                   </span>
 
-                  <div className="px-3 py-1 rounded-xl bg-blood-950 border border-blood-500/40 font-black text-blood-400 text-base shadow-inner">
+                  <div className="px-2.5 py-1 rounded-xl bg-blood-950 border border-blood-500/40 font-black text-blood-400 text-sm sm:text-base shadow-inner">
                     {req.bloodType} ({req.unitsNeeded} {req.unitsNeeded > 1 ? 'Units' : 'Unit'})
                   </div>
                 </div>
 
-                <h3 className="text-lg font-bold text-slate-100 mb-1 group-hover:text-blood-400 transition-colors">
+                <h3 className="text-base sm:text-lg font-bold text-slate-100 mb-1 group-hover:text-blood-400 transition-colors">
                   {req.patientName}
                 </h3>
 
-                <div className="space-y-2 text-xs text-slate-300 bg-dark-900/60 p-3.5 rounded-2xl border border-white/5 mt-3">
+                <div className="space-y-2 text-xs text-slate-300 bg-dark-900/60 p-3 rounded-2xl border border-white/5 mt-3">
                   <div className="flex items-center gap-2">
                     <Hospital className="w-3.5 h-3.5 text-slate-500 shrink-0" />
                     <span className="truncate">{req.hospital || 'Hospital unspecified'}</span>
@@ -321,8 +299,8 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
 
       {/* CREATE / EDIT BLOOD REQUEST MODAL */}
       {(isAddModalOpen || editingRequest) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-900/80 backdrop-blur-md">
-          <div className="relative w-full max-w-lg glass-panel-glow rounded-3xl p-6 sm:p-8 shadow-2xl border border-blood-500/30 overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-dark-900/80 backdrop-blur-md animate-fade-in">
+          <div className="relative w-full max-w-lg max-h-[90vh] glass-panel-glow rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl border border-blood-500/30 overflow-hidden flex flex-col">
             
             <button
               onClick={() => { setIsAddModalOpen(false); setEditingRequest(null); }}
@@ -331,17 +309,17 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
               <X className="w-5 h-5" />
             </button>
 
-            <h2 className="text-xl font-bold text-slate-100 mb-4">
+            <h2 className="text-lg sm:text-xl font-bold text-slate-100 mb-3 pr-8">
               {editingRequest ? 'Edit Blood Request' : 'Publish Emergency Blood Request'}
             </h2>
 
             {error && (
-              <div className="mb-4 p-3 rounded-xl bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs">
+              <div className="mb-3 p-3 rounded-xl bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs">
                 {error}
               </div>
             )}
 
-            <form onSubmit={editingRequest ? handleEditSubmit : handleAddSubmit} className="space-y-3">
+            <form onSubmit={editingRequest ? handleEditSubmit : handleAddSubmit} className="space-y-3 overflow-y-auto pr-1 flex-1">
               
               <div>
                 <label className="block text-xs font-semibold text-slate-400 mb-1">Patient Name *</label>
@@ -355,7 +333,7 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <div>
                   <label className="block text-xs font-semibold text-slate-400 mb-1">Blood Group *</label>
                   <select
@@ -408,7 +386,7 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 <div>
                   <label className="block text-xs font-semibold text-slate-400 mb-1">Contact Phone *</label>
                   <input
@@ -447,9 +425,16 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full mt-3 py-3 rounded-xl bg-gradient-to-r from-blood-600 to-blood-500 hover:from-blood-500 text-white font-bold text-sm shadow-lg shadow-blood-900/60 disabled:opacity-50"
+                className="w-full mt-3 py-3 rounded-xl bg-gradient-to-r from-blood-600 to-blood-500 hover:from-blood-500 text-white font-bold text-sm shadow-lg shadow-blood-900/60 disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                {loading ? 'Submitting...' : (editingRequest ? 'Update Request' : 'Publish Emergency Request')}
+                {loading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Submitting...</span>
+                  </>
+                ) : (
+                  <span>{editingRequest ? 'Update Request' : 'Publish Emergency Request'}</span>
+                )}
               </button>
 
             </form>
