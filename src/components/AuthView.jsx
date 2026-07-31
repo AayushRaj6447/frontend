@@ -164,7 +164,7 @@ export default function AuthView({ onAuthSuccess, showToast, theme }) {
   };
 
   return (
-    <div className="w-full min-h-[calc(100vh-140px)] flex items-center justify-center py-4 px-2 sm:px-4">
+    <div className="w-full flex-1 flex items-center justify-center py-2 sm:py-6 px-1 sm:px-4">
       <div className="w-full max-w-4xl perspective-container">
         
         {/* 3D Animated Flip Container */}
@@ -174,30 +174,30 @@ export default function AuthView({ onAuthSuccess, showToast, theme }) {
           {/* FRONT SIDE: SIGN IN PORTAL */}
           {/* ========================================================================= */}
           <div className="flip-card-front">
-            <div className="glass-panel-glow rounded-3xl overflow-hidden shadow-2xl border theme-border grid grid-cols-1 md:grid-cols-12 min-h-[520px] transition-all">
+            <div className="glass-panel-glow rounded-3xl overflow-hidden shadow-2xl border theme-border grid grid-cols-1 md:grid-cols-12 min-h-0 md:min-h-[520px] transition-all">
               
               {/* Left Sub-Pane: Register Promo Banner */}
-              <div className="md:col-span-5 bg-gradient-to-br from-blood-900 via-blood-950 to-dark-900 p-8 flex flex-col justify-between text-white relative overflow-hidden">
-                <div className="relative z-10 space-y-4">
+              <div className="md:col-span-5 bg-gradient-to-br from-blood-900 via-blood-950 to-dark-900 p-6 sm:p-8 flex flex-col justify-between text-white relative overflow-hidden">
+                <div className="relative z-10 space-y-3 sm:space-y-4">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-extrabold uppercase tracking-wider backdrop-blur-md">
                     <HeartPulse className="w-4 h-4 text-rose-300 animate-pulse" />
                     <span>HemoVerse Network</span>
                   </div>
 
-                  <h2 className="text-3xl sm:text-4xl font-black leading-tight tracking-tight">
+                  <h2 className="text-2xl sm:text-4xl font-black leading-tight tracking-tight">
                     Don't Have an Account Yet?
                   </h2>
 
                   <p className="text-xs sm:text-sm text-rose-100/80 leading-relaxed font-normal">
-                    Join our emergency blood logistics network. Register as a donor or patient to post & fulfill emergency requests instantly.
+                    Join our emergency blood logistics network. Register as a donor or patient to post & fulfill emergency requests.
                   </p>
                 </div>
 
-                <div className="relative z-10 pt-6">
+                <div className="relative z-10 pt-4 sm:pt-6">
                   <button
                     type="button"
                     onClick={() => { setIsFlipped(true); setIsForgotMode(false); setError(''); }}
-                    className="w-full py-4 px-6 rounded-2xl bg-white text-blood-900 font-black text-sm shadow-xl hover:bg-slate-100 transition-all hover-lift flex items-center justify-center gap-2"
+                    className="w-full py-3.5 sm:py-4 px-6 rounded-2xl bg-white text-blood-900 font-black text-sm shadow-xl hover:bg-slate-100 transition-all hover-lift flex items-center justify-center gap-2"
                   >
                     <UserPlus className="w-4 h-4" />
                     Register Account ➔
@@ -208,7 +208,7 @@ export default function AuthView({ onAuthSuccess, showToast, theme }) {
               {/* Right Sub-Pane: Sign In Form Credentials */}
               <div className="md:col-span-7 p-6 sm:p-10 flex flex-col justify-between theme-card">
                 <div>
-                  <div className="flex items-center justify-between mb-6 pb-4 border-b theme-border">
+                  <div className="flex items-center justify-between mb-4 sm:mb-6 pb-3 sm:pb-4 border-b theme-border">
                     <div>
                       <h2 className="text-2xl sm:text-3xl font-black theme-text-primary">
                         {isForgotMode ? 'Password Reset' : 'Sign In to Portal'}
@@ -383,7 +383,7 @@ export default function AuthView({ onAuthSuccess, showToast, theme }) {
           {/* BACK SIDE: REGISTER PORTAL (FLIPPED 180 DEG) */}
           {/* ========================================================================= */}
           <div className="flip-card-back">
-            <div className="glass-panel-glow rounded-3xl overflow-hidden shadow-2xl border theme-border grid grid-cols-1 md:grid-cols-12 min-h-[520px] transition-all">
+            <div className="glass-panel-glow rounded-3xl overflow-hidden shadow-2xl border theme-border grid grid-cols-1 md:grid-cols-12 min-h-0 md:min-h-[520px] transition-all">
               
               {/* Left Sub-Pane: Credentials Form for Registration */}
               <div className="md:col-span-7 p-6 sm:p-10 flex flex-col justify-between theme-card order-2 md:order-1">
@@ -520,14 +520,14 @@ export default function AuthView({ onAuthSuccess, showToast, theme }) {
               </div>
 
               {/* Right Sub-Pane: Already Have Account Promo Banner */}
-              <div className="md:col-span-5 bg-gradient-to-bl from-blood-900 via-blood-950 to-dark-950 p-8 flex flex-col justify-between text-white relative overflow-hidden order-1 md:order-2">
-                <div className="relative z-10 space-y-4">
+              <div className="md:col-span-5 bg-gradient-to-bl from-blood-900 via-blood-950 to-dark-950 p-6 sm:p-8 flex flex-col justify-between text-white relative overflow-hidden order-1 md:order-2">
+                <div className="relative z-10 space-y-3 sm:space-y-4">
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-extrabold uppercase tracking-wider backdrop-blur-md">
                     <ShieldCheck className="w-4 h-4 text-emerald-400" />
                     <span>Member Access</span>
                   </div>
 
-                  <h2 className="text-3xl sm:text-4xl font-black leading-tight tracking-tight">
+                  <h2 className="text-2xl sm:text-4xl font-black leading-tight tracking-tight">
                     Already Have an Account?
                   </h2>
 
@@ -536,11 +536,11 @@ export default function AuthView({ onAuthSuccess, showToast, theme }) {
                   </p>
                 </div>
 
-                <div className="relative z-10 pt-6">
+                <div className="relative z-10 pt-4 sm:pt-6">
                   <button
                     type="button"
                     onClick={() => { setIsFlipped(false); setIsForgotMode(false); setError(''); }}
-                    className="w-full py-4 px-6 rounded-2xl bg-white text-blood-950 font-black text-sm shadow-xl hover:bg-slate-100 transition-all hover-lift flex items-center justify-center gap-2"
+                    className="w-full py-3.5 sm:py-4 px-6 rounded-2xl bg-white text-blood-950 font-black text-sm shadow-xl hover:bg-slate-100 transition-all hover-lift flex items-center justify-center gap-2"
                   >
                     <LogIn className="w-4 h-4" />
                     Flip to Sign In ➔

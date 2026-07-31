@@ -29,6 +29,12 @@ body.light-mode {
 }
 
 @layer base {
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
     background-color: var(--bg-main);
     color: var(--text-primary);
@@ -164,7 +170,7 @@ body.light-mode {
   -webkit-text-fill-color: transparent;
 }
 
-/* 3D Card Flip Animations & Height Fixed Container */
+/* 3D Card Flip Animations & Responsive Heights */
 .perspective-container {
   perspective: 1400px;
   position: relative;
@@ -198,6 +204,53 @@ body.light-mode {
   transform: rotateY(180deg);
 }
 
+/* Mobile responsive fixes for perspective container */
+@media (max-width: 767px) {
+  .perspective-container {
+    min-height: auto;
+  }
+  .flip-card-inner {
+    min-height: auto;
+  }
+  .flip-card-front,
+  .flip-card-back {
+    position: relative;
+    height: auto;
+  }
+}
+
+/* Pure Text Splash Keyframe Animation (No Icons, No Emojis) */
+@keyframes splashTextAnim {
+  0% {
+    opacity: 0;
+    filter: blur(14px);
+    letter-spacing: -0.05em;
+    transform: scale(0.9);
+  }
+  35% {
+    opacity: 1;
+    filter: blur(0px);
+    letter-spacing: 0.25em;
+    transform: scale(1.04);
+  }
+  75% {
+    opacity: 1;
+    filter: blur(0px);
+    letter-spacing: 0.3em;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(10px);
+    letter-spacing: 0.4em;
+    transform: scale(1.08);
+  }
+}
+
+.animate-splash-text {
+  animation: splashTextAnim 2.3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
 /* Dynamic Keyframe Animations */
 @keyframes float-slow {
   0%, 100% {
@@ -228,11 +281,6 @@ body.light-mode {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-}
-
-@keyframes shimmer-slide {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
 }
 
 .animate-float-slow {
