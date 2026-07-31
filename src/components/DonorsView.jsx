@@ -4,6 +4,17 @@ import { addDonorApi, editDonorApi, removeDonorApi } from '../services/api';
 
 const BLOOD_GROUPS = ['All', 'A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
+// Helper to reliably check item ownership
+const checkIsOwner = (currentUser, item) => {
+  if (!currentUser || !item) return false;
+  const currentUserId = currentUser._id || currentUser.id || currentUser.userId;
+  const creator = item.createdBy;
+  const creatorId = creator?._id || creator?.id || (typeof creator === 'string' ? creator : null);
+  
+  if (!currentUserId || !creatorId) return false;
+  return String(currentUserId) === String(creatorId);
+};
+
 export default function DonorsView({ donors = [], onRefresh, currentUser, showToast, onOpenAuth }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBloodGroup, setSelectedBloodGroup] = useState('All');
@@ -233,7 +244,7 @@ export default function DonorsView({ donors = [], onRefresh, currentUser, showTo
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {filteredDonors.map((donor) => {
-            const isOwner = currentUser && String(currentUser._id) === String(donor.createdBy?._id || donor.createdBy);
+            const isOwner = checkIsOwner(currentUser, donor);
             return (
               <div
                 key={donor._id}
@@ -335,7 +346,7 @@ export default function DonorsView({ donors = [], onRefresh, currentUser, showTo
         </div>
       )}
 
-      {/* DONOR PROFILE DETAIL MODAL (Available to all loggers) */}
+      {/* DONOR PROFILE DETAIL MODAL */}
       {viewingDonor && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in-up">
           <div className="relative w-full max-w-md glass-panel-glow rounded-3xl p-6 sm:p-7 shadow-2xl border theme-border overflow-hidden flex flex-col space-y-5">
@@ -429,7 +440,7 @@ export default function DonorsView({ donors = [], onRefresh, currentUser, showTo
         </div>
       )}
 
-      {/* ADD / EDIT DONOR MODAL (Only available to creator/logged-in users) */}
+      {/* ADD / EDIT DONOR MODAL */}
       {(isAddModalOpen || editingDonor) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in-up">
           <div className="relative w-full max-w-xl max-h-[90vh] glass-panel-glow rounded-3xl p-5 sm:p-7 shadow-2xl border theme-border overflow-hidden flex flex-col">

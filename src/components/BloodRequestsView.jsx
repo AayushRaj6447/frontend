@@ -4,6 +4,17 @@ import { addBloodRequestApi, editBloodRequestApi, removeBloodRequestApi } from '
 
 const URGENCY_LEVELS = ['All', 'Critical', 'High', 'Medium', 'Low'];
 
+// Helper to reliably check item ownership
+const checkIsOwner = (currentUser, item) => {
+  if (!currentUser || !item) return false;
+  const currentUserId = currentUser._id || currentUser.id || currentUser.userId;
+  const creator = item.createdBy;
+  const creatorId = creator?._id || creator?.id || (typeof creator === 'string' ? creator : null);
+  
+  if (!currentUserId || !creatorId) return false;
+  return String(currentUserId) === String(creatorId);
+};
+
 export default function BloodRequestsView({ requests = [], onRefresh, currentUser, showToast, onOpenAuth }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUrgency, setSelectedUrgency] = useState('All');
@@ -227,7 +238,7 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {filteredRequests.map((req) => {
-            const isOwner = currentUser && String(currentUser._id) === String(req.createdBy?._id || req.createdBy);
+            const isOwner = checkIsOwner(currentUser, req);
             return (
               <div
                 key={req._id}
