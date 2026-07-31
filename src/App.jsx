@@ -9,7 +9,7 @@ import { getAllDonorsApi, getAllBloodRequestsApi, logoutUserApi } from './servic
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
-  const [activeTab, setActiveTab] = useState('auth'); // Default to auth page for non-logged in users
+  const [activeTab, setActiveTab] = useState('dashboard'); // Default to dashboard so guest users can browse
   const [toast, setToast] = useState(null);
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
 
@@ -36,21 +36,17 @@ export default function App() {
     }, 4000);
   };
 
-  // Load saved user on mount
+  // Load saved user and fetch public data on mount
   useEffect(() => {
+    fetchData();
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       try {
         const userObj = JSON.parse(savedUser);
         setCurrentUser(userObj);
-        setActiveTab('dashboard');
-        fetchData();
       } catch (e) {
         console.error('Failed to parse saved user');
-        setActiveTab('auth');
       }
-    } else {
-      setActiveTab('auth');
     }
   }, []);
 
@@ -73,7 +69,7 @@ export default function App() {
   const handleLogout = () => {
     logoutUserApi();
     setCurrentUser(null);
-    setActiveTab('auth');
+    setActiveTab('dashboard');
     showToast('Logged out successfully.', 'info');
   };
 
@@ -103,11 +99,11 @@ export default function App() {
 
       {/* Main View Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8 z-10">
-        {!currentUser || activeTab === 'auth' ? (
+        {activeTab === 'auth' ? (
           <AuthView
             onAuthSuccess={handleAuthSuccess}
             showToast={showToast}
-            onCancel={() => {}}
+            onCancel={() => setActiveTab('dashboard')}
             theme={theme}
           />
         ) : (
@@ -116,7 +112,9 @@ export default function App() {
               <DashboardView
                 donors={donors}
                 requests={requests}
+                currentUser={currentUser}
                 onNavigate={(tab) => setActiveTab(tab)}
+                onOpenAuth={() => setActiveTab('auth')}
               />
             )}
 
@@ -126,6 +124,7 @@ export default function App() {
                 onRefresh={fetchData}
                 currentUser={currentUser}
                 showToast={showToast}
+                onOpenAuth={() => setActiveTab('auth')}
               />
             )}
 
@@ -135,6 +134,7 @@ export default function App() {
                 onRefresh={fetchData}
                 currentUser={currentUser}
                 showToast={showToast}
+                onOpenAuth={() => setActiveTab('auth')}
               />
             )}
           </>
@@ -147,13 +147,11 @@ export default function App() {
           <div>
             <span className="font-bold theme-text-secondary">HemoVerse</span> &copy; 2026. Empowering healthcare with real-time blood logistics.
           </div>
-          {currentUser && (
-            <div className="flex items-center gap-4 theme-text-secondary">
-              <button onClick={() => setActiveTab('dashboard')} className="hover:underline">Dashboard</button>
-              <button onClick={() => setActiveTab('donors')} className="hover:underline">Donors</button>
-              <button onClick={() => setActiveTab('requests')} className="hover:underline">Blood Requests</button>
-            </div>
-          )}
+          <div className="flex items-center gap-4 theme-text-secondary">
+            <button onClick={() => setActiveTab('dashboard')} className="hover:underline">Dashboard</button>
+            <button onClick={() => setActiveTab('donors')} className="hover:underline">Donors</button>
+            <button onClick={() => setActiveTab('requests')} className="hover:underline">Blood Requests</button>
+          </div>
         </div>
       </footer>
 

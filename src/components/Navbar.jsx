@@ -15,7 +15,7 @@ export default function Navbar({ activeTab, setActiveTab, currentUser, onOpenAut
         
         {/* Brand Logo */}
         <div 
-          onClick={() => handleTabClick(currentUser ? 'dashboard' : 'auth')}
+          onClick={() => handleTabClick('dashboard')}
           className="flex items-center gap-3.5 cursor-pointer group"
         >
           <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blood-800 via-blood-600 to-blood-500 p-0.5 shadow-xl shadow-blood-900/30 group-hover:scale-105 transition-transform duration-300">
@@ -29,51 +29,44 @@ export default function Navbar({ activeTab, setActiveTab, currentUser, onOpenAut
           </div>
         </div>
 
-        {/* Desktop Navigation Tabs */}
-        {currentUser ? (
-          <nav className="hidden md:flex items-center gap-1.5 glass-panel p-1.5 rounded-2xl border theme-border">
-            <button
-              onClick={() => handleTabClick('dashboard')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-300 ${
-                activeTab === 'dashboard'
-                  ? 'bg-gradient-to-r from-blood-700 to-blood-600 text-white shadow-lg shadow-blood-900/40 scale-[1.02]'
-                  : 'theme-text-muted hover:theme-text-primary hover:bg-blood-500/10'
-              }`}
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              Dashboard
-            </button>
+        {/* Desktop Navigation Tabs (Visible to all users) */}
+        <nav className="hidden md:flex items-center gap-1.5 glass-panel p-1.5 rounded-2xl border theme-border">
+          <button
+            onClick={() => handleTabClick('dashboard')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+              activeTab === 'dashboard'
+                ? 'bg-gradient-to-r from-blood-700 to-blood-600 text-white shadow-lg shadow-blood-900/40 scale-[1.02]'
+                : 'theme-text-muted hover:theme-text-primary hover:bg-blood-500/10'
+            }`}
+          >
+            <LayoutDashboard className="w-4 h-4" />
+            Dashboard
+          </button>
 
-            <button
-              onClick={() => handleTabClick('donors')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-300 ${
-                activeTab === 'donors'
-                  ? 'bg-gradient-to-r from-blood-700 to-blood-600 text-white shadow-lg shadow-blood-900/40 scale-[1.02]'
-                  : 'theme-text-muted hover:theme-text-primary hover:bg-blood-500/10'
-              }`}
-            >
-              <Users className="w-4 h-4" />
-              Donors Directory
-            </button>
+          <button
+            onClick={() => handleTabClick('donors')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+              activeTab === 'donors'
+                ? 'bg-gradient-to-r from-blood-700 to-blood-600 text-white shadow-lg shadow-blood-900/40 scale-[1.02]'
+                : 'theme-text-muted hover:theme-text-primary hover:bg-blood-500/10'
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            Donors Directory
+          </button>
 
-            <button
-              onClick={() => handleTabClick('requests')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-300 ${
-                activeTab === 'requests'
-                  ? 'bg-gradient-to-r from-blood-700 to-blood-600 text-white shadow-lg shadow-blood-900/40 scale-[1.02]'
-                  : 'theme-text-muted hover:theme-text-primary hover:bg-blood-500/10'
-              }`}
-            >
-              <HeartPulse className="w-4 h-4" />
-              Blood Requests
-            </button>
-          </nav>
-        ) : (
-          <div className="hidden md:flex items-center gap-2 px-4 py-1.5 rounded-full bg-blood-500/10 border border-blood-500/30 text-blood-500 text-xs font-extrabold tracking-wide animate-pulse">
-            <Lock className="w-3.5 h-3.5" />
-            <span>Emergency Portal Signed Out</span>
-          </div>
-        )}
+          <button
+            onClick={() => handleTabClick('requests')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+              activeTab === 'requests'
+                ? 'bg-gradient-to-r from-blood-700 to-blood-600 text-white shadow-lg shadow-blood-900/40 scale-[1.02]'
+                : 'theme-text-muted hover:theme-text-primary hover:bg-blood-500/10'
+            }`}
+          >
+            <HeartPulse className="w-4 h-4" />
+            Blood Requests
+          </button>
+        </nav>
 
         {/* Desktop Auth / User Actions & Theme Toggle */}
         <div className="flex items-center gap-2.5">
@@ -142,57 +135,55 @@ export default function Navbar({ activeTab, setActiveTab, currentUser, onOpenAut
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden pt-3 pb-2 border-t theme-border mt-3 space-y-2 animate-fade-in-up">
+          <button
+            onClick={() => handleTabClick('dashboard')}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-extrabold ${
+              activeTab === 'dashboard' ? 'bg-blood-600 text-white' : 'theme-text-secondary hover:bg-blood-500/10'
+            }`}
+          >
+            <LayoutDashboard className="w-4 h-4" />
+            Dashboard
+          </button>
+
+          <button
+            onClick={() => handleTabClick('donors')}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-extrabold ${
+              activeTab === 'donors' ? 'bg-blood-600 text-white' : 'theme-text-secondary hover:bg-blood-500/10'
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            Donors Directory
+          </button>
+
+          <button
+            onClick={() => handleTabClick('requests')}
+            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-extrabold ${
+              activeTab === 'requests' ? 'bg-blood-600 text-white' : 'theme-text-secondary hover:bg-blood-500/10'
+            }`}
+          >
+            <HeartPulse className="w-4 h-4" />
+            Blood Requests
+          </button>
+
           {currentUser ? (
-            <>
-              <button
-                onClick={() => handleTabClick('dashboard')}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-extrabold ${
-                  activeTab === 'dashboard' ? 'bg-blood-600 text-white' : 'theme-text-secondary hover:bg-blood-500/10'
-                }`}
-              >
-                <LayoutDashboard className="w-4 h-4" />
-                Dashboard
-              </button>
-
-              <button
-                onClick={() => handleTabClick('donors')}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-extrabold ${
-                  activeTab === 'donors' ? 'bg-blood-600 text-white' : 'theme-text-secondary hover:bg-blood-500/10'
-                }`}
-              >
-                <Users className="w-4 h-4" />
-                Donors Directory
-              </button>
-
-              <button
-                onClick={() => handleTabClick('requests')}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-extrabold ${
-                  activeTab === 'requests' ? 'bg-blood-600 text-white' : 'theme-text-secondary hover:bg-blood-500/10'
-                }`}
-              >
-                <HeartPulse className="w-4 h-4" />
-                Blood Requests
-              </button>
-
-              <div className="pt-2 border-t theme-border flex items-center justify-between px-4 py-2">
-                <div className="flex items-center gap-2">
-                  {currentUser.avatar ? (
-                    <img src={currentUser.avatar} alt={currentUser.firstName} className="w-7 h-7 rounded-full object-cover border border-blood-500" />
-                  ) : (
-                    <div className="w-7 h-7 rounded-full bg-blood-800 text-white flex items-center justify-center text-xs font-bold">
-                      {currentUser.firstName?.[0] || 'U'}
-                    </div>
-                  )}
-                  <span className="text-sm font-bold theme-text-primary">{currentUser.firstName}</span>
-                </div>
-                <button
-                  onClick={() => { onLogout(); setMobileMenuOpen(false); }}
-                  className="px-3 py-1.5 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-500 text-xs font-bold flex items-center gap-1"
-                >
-                  <LogOut className="w-3.5 h-3.5" /> Logout
-                </button>
+            <div className="pt-2 border-t theme-border flex items-center justify-between px-4 py-2">
+              <div className="flex items-center gap-2">
+                {currentUser.avatar ? (
+                  <img src={currentUser.avatar} alt={currentUser.firstName} className="w-7 h-7 rounded-full object-cover border border-blood-500" />
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-blood-800 text-white flex items-center justify-center text-xs font-bold">
+                    {currentUser.firstName?.[0] || 'U'}
+                  </div>
+                )}
+                <span className="text-sm font-bold theme-text-primary">{currentUser.firstName}</span>
               </div>
-            </>
+              <button
+                onClick={() => { onLogout(); setMobileMenuOpen(false); }}
+                className="px-3 py-1.5 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-500 text-xs font-bold flex items-center gap-1"
+              >
+                <LogOut className="w-3.5 h-3.5" /> Logout
+              </button>
+            </div>
           ) : (
             <button
               onClick={() => handleTabClick('auth')}

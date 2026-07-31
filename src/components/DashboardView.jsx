@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Users, HeartPulse, ShieldAlert, Activity, ArrowRight, Phone, Hospital, Award, Search, Droplet, Filter } from 'lucide-react';
+import { Users, HeartPulse, ShieldAlert, Activity, ArrowRight, Phone, Hospital, Award, Search, Droplet, Filter, Eye, Lock } from 'lucide-react';
 
 const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 
-export default function DashboardView({ donors = [], requests = [], onNavigate }) {
+export default function DashboardView({ donors = [], requests = [], currentUser, onNavigate, onOpenAuth }) {
   const [selectedBloodType, setSelectedBloodType] = useState(null);
 
   // Compute Statistics
@@ -204,13 +204,23 @@ export default function DashboardView({ donors = [], requests = [], onNavigate }
                       </div>
                     </div>
                     
-                    <a
-                      href={`tel:${donor.phoneNumber}`}
-                      className="px-3.5 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-500 text-xs font-black flex items-center gap-1.5 hover:bg-emerald-500/25 transition-colors shrink-0"
-                    >
-                      <Phone className="w-3.5 h-3.5" />
-                      <span>Contact</span>
-                    </a>
+                    {currentUser ? (
+                      <a
+                        href={`tel:${donor.phoneNumber}`}
+                        className="px-3.5 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-500 text-xs font-black flex items-center gap-1.5 hover:bg-emerald-500/25 transition-colors shrink-0"
+                      >
+                        <Phone className="w-3.5 h-3.5" />
+                        <span>Contact</span>
+                      </a>
+                    ) : (
+                      <button
+                        onClick={onOpenAuth}
+                        className="px-3.5 py-2 rounded-xl bg-blood-500/15 border border-blood-500/40 text-blood-500 text-xs font-black flex items-center gap-1.5 hover:bg-blood-500/25 transition-colors shrink-0"
+                      >
+                        <Lock className="w-3.5 h-3.5" />
+                        <span>Sign In</span>
+                      </button>
+                    )}
                   </div>
                 ))
               )}

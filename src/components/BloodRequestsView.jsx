@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { HeartPulse, Plus, Search, Phone, Hospital, AlertCircle, ShieldAlert, Clock, Trash2, Edit3, X, FileText, CheckCircle } from 'lucide-react';
+import { HeartPulse, Plus, Search, Phone, Hospital, AlertCircle, ShieldAlert, Clock, Trash2, Edit3, X, FileText, CheckCircle, Lock } from 'lucide-react';
 import { addBloodRequestApi, editBloodRequestApi, removeBloodRequestApi } from '../services/api';
 
 const URGENCY_LEVELS = ['All', 'Critical', 'High', 'Medium', 'Low'];
 
-export default function BloodRequestsView({ requests = [], onRefresh, currentUser, showToast }) {
+export default function BloodRequestsView({ requests = [], onRefresh, currentUser, showToast, onOpenAuth }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUrgency, setSelectedUrgency] = useState('All');
 
@@ -33,6 +33,7 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
 
     if (!currentUser) {
       if (showToast) showToast('Please log in to submit a blood request.', 'error');
+      if (onOpenAuth) onOpenAuth();
       return;
     }
 
@@ -169,6 +170,7 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
           onClick={() => {
             if (!currentUser) {
               if (showToast) showToast('Please log in to submit a request.', 'error');
+              if (onOpenAuth) onOpenAuth();
               return;
             }
             resetForm();
@@ -224,78 +226,101 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-          {filteredRequests.map((req) => (
-            <div
-              key={req._id}
-              className="glass-panel rounded-3xl p-5 sm:p-6 border theme-border hover:border-blood-500/50 transition-all hover-lift flex flex-col justify-between group"
-            >
-              <div>
-                {/* Top Badge & Group */}
-                <div className="flex items-start justify-between gap-2 mb-3.5">
-                  <span className={`px-3 py-1 rounded-full border text-[11px] uppercase tracking-wider flex items-center gap-1.5 shadow-sm ${getUrgencyBadge(req.urgency)}`}>
-                    <ShieldAlert className="w-3.5 h-3.5" />
-                    {req.urgency}
-                  </span>
+          {filteredRequests.map((req) => {
+            const isOwner = currentUser && String(currentUser._id) === String(req.createdBy?._id || req.createdBy);
+            return (
+              <div
+                key={req._id}
+                className="glass-panel rounded-3xl p-5 sm:p-6 border theme-border hover:border-blood-500/50 transition-all hover-lift flex flex-col justify-between group"
+              >
+                <div>
+                  {/* Top Badge & Group */}
+                  <div className="flex items-start justify-between gap-2 mb-3.5">
+                    <span className={`px-3 py-1 rounded-full border text-[11px] uppercase tracking-wider flex items-center gap-1.5 shadow-sm ${getUrgencyBadge(req.urgency)}`}>
+                      <ShieldAlert className="w-3.5 h-3.5" />
+                      {req.urgency}
+                    </span>
 
-                  <div className="px-3.5 py-1.5 rounded-2xl bg-blood-500/15 border border-blood-500/40 font-black text-blood-500 text-sm sm:text-base shadow-inner">
-                    {req.bloodType} ({req.unitsNeeded} {req.unitsNeeded > 1 ? 'Units' : 'Unit'})
+                    <div className="px-3.5 py-1.5 rounded-2xl bg-blood-500/15 border border-blood-500/40 font-black text-blood-500 text-sm sm:text-base shadow-inner">
+                      {req.bloodType} ({req.unitsNeeded} {req.unitsNeeded > 1 ? 'Units' : 'Unit'})
+                    </div>
+                  </div>
+
+                  <h3 className="text-lg sm:text-xl font-black theme-text-primary mb-1.5 group-hover:text-blood-500 transition-colors">
+                    {req.patientName}
+                  </h3>
+
+                  <div className="space-y-2.5 text-xs theme-card-sub p-3.5 rounded-2xl border theme-border mt-3.5">
+                    <div className="flex items-center gap-2">
+                      <Hospital className="w-4 h-4 theme-text-muted shrink-0" />
+                      <span className="truncate font-semibold theme-text-primary">{req.hospital || 'Hospital unspecified'}</span>
+                    </div>
+                    
+                    {/* Privacy Contact Phone Number */}
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <Phone className="w-4 h-4 theme-text-muted shrink-0" />
+                        {currentUser ? (
+                          <a href={`tel:${req.phoneNumber}`} className="text-emerald-500 font-extrabold hover:underline truncate">
+                            {req.phoneNumber}
+                          </a>
+                        ) : (
+                          <span className="text-slate-400 font-mono font-bold flex items-center gap-1 truncate" title="Sign in to view contact details">
+                            <Lock className="w-3 h-3 text-amber-500 shrink-0" />
+                            +91 ••••• •••••
+                          </span>
+                        )}
+                      </div>
+
+                      {!currentUser && (
+                        <button
+                          onClick={onOpenAuth}
+                          className="text-[10px] font-black text-blood-500 hover:underline shrink-0"
+                        >
+                          Sign In
+                        </button>
+                      )}
+                    </div>
+
+                    {req.additionalNotes && (
+                      <div className="pt-2 border-t theme-border theme-text-muted italic text-[11px] line-clamp-2">
+                        "{req.additionalNotes}"
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                <h3 className="text-lg sm:text-xl font-black theme-text-primary mb-1.5 group-hover:text-blood-500 transition-colors">
-                  {req.patientName}
-                </h3>
+                {/* Action Bar */}
+                <div className="mt-4 pt-3.5 border-t theme-border flex items-center justify-between">
+                  <span className="text-[11px] theme-text-muted flex items-center gap-1 font-semibold">
+                    <Clock className="w-3.5 h-3.5 theme-text-muted" />
+                    Active Emergency Request
+                  </span>
 
-                <div className="space-y-2.5 text-xs theme-card-sub p-3.5 rounded-2xl border theme-border mt-3.5">
-                  <div className="flex items-center gap-2">
-                    <Hospital className="w-4 h-4 theme-text-muted shrink-0" />
-                    <span className="truncate font-semibold theme-text-primary">{req.hospital || 'Hospital unspecified'}</span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <Phone className="w-4 h-4 theme-text-muted shrink-0" />
-                    <a href={`tel:${req.phoneNumber}`} className="text-emerald-500 font-extrabold hover:underline">
-                      {req.phoneNumber}
-                    </a>
-                  </div>
-
-                  {req.additionalNotes && (
-                    <div className="pt-2 border-t theme-border theme-text-muted italic text-[11px] line-clamp-2">
-                      "{req.additionalNotes}"
+                  {/* Edit and Delete Buttons ONLY visible to Authorized Owner */}
+                  {isOwner && (
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => openEditModal(req)}
+                        title="Edit Request"
+                        className="p-2 theme-text-muted hover:theme-text-primary hover:bg-blood-500/10 rounded-xl transition-colors"
+                      >
+                        <Edit3 className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(req._id)}
+                        title="Delete Request"
+                        className="p-2 theme-text-muted hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   )}
                 </div>
+
               </div>
-
-              {/* Action Bar */}
-              <div className="mt-4 pt-3.5 border-t theme-border flex items-center justify-between">
-                <span className="text-[11px] theme-text-muted flex items-center gap-1 font-semibold">
-                  <Clock className="w-3.5 h-3.5 theme-text-muted" />
-                  Active Request
-                </span>
-
-                {currentUser && (String(currentUser._id) === String(req.createdBy?._id || req.createdBy)) && (
-                  <div className="flex items-center gap-1">
-                    <button
-                      onClick={() => openEditModal(req)}
-                      title="Edit Request"
-                      className="p-2 theme-text-muted hover:theme-text-primary hover:bg-blood-500/10 rounded-xl transition-colors"
-                    >
-                      <Edit3 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(req._id)}
-                      title="Delete Request"
-                      className="p-2 theme-text-muted hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                )}
-              </div>
-
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
