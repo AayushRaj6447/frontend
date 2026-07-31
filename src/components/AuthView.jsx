@@ -72,8 +72,14 @@ export default function AuthView({ onAuthSuccess, showToast, theme, onToggleThem
     setLoading(true);
 
     try {
-      await sendOtpApi(registerData.email, 'register');
-      if (showToast) showToast(`Verification OTP code sent to ${registerData.email}!`, 'info');
+      const res = await sendOtpApi(registerData.email, 'register');
+      const devOtp = res?.data?.devOtp || res?.devOtp;
+      if (devOtp) {
+        setRegisterData((prev) => ({ ...prev, otp: devOtp }));
+        if (showToast) showToast(`OTP Code Sent! (Dev Auto-fill: ${devOtp})`, 'info');
+      } else {
+        if (showToast) showToast(`Verification OTP code sent to ${registerData.email}!`, 'info');
+      }
       setRegisterStep(2);
     } catch (err) {
       console.error('OTP request error:', err);
@@ -129,8 +135,14 @@ export default function AuthView({ onAuthSuccess, showToast, theme, onToggleThem
     setLoading(true);
 
     try {
-      await forgotPasswordSendOtpApi(forgotEmail);
-      if (showToast) showToast(`Password reset OTP code sent to ${forgotEmail}`, 'info');
+      const res = await forgotPasswordSendOtpApi(forgotEmail);
+      const devOtp = res?.data?.devOtp || res?.devOtp;
+      if (devOtp) {
+        setForgotOtp(devOtp);
+        if (showToast) showToast(`Reset OTP Code Sent! (Dev Auto-fill: ${devOtp})`, 'info');
+      } else {
+        if (showToast) showToast(`Password reset OTP code sent to ${forgotEmail}`, 'info');
+      }
       setForgotStep(2);
     } catch (err) {
       setError(err.message || 'Failed to send reset code.');
