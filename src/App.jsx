@@ -11,6 +11,18 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [activeTab, setActiveTab] = useState('auth'); // Default to auth page for non-logged in users
   const [toast, setToast] = useState(null);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+
+  // Sync theme with body class
+  useEffect(() => {
+    document.body.classList.remove('dark-mode', 'light-mode');
+    document.body.classList.add(`${theme}-mode`);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   // Data states
   const [donors, setDonors] = useState([]);
@@ -81,6 +93,8 @@ export default function App() {
         currentUser={currentUser}
         onOpenAuth={() => setActiveTab('auth')}
         onLogout={handleLogout}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       {/* Main View Container */}

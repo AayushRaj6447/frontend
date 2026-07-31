@@ -290,22 +290,24 @@ export default function DonorsView({ donors = [], onRefresh, currentUser, showTo
                   Verified Donor
                 </span>
                 
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => openEditModal(donor)}
-                    title="Edit Donor"
-                    className="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                  >
-                    <Edit3 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(donor._id)}
-                    title="Delete Donor"
-                    className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-white/10 rounded-lg transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+                {currentUser && (String(currentUser._id) === String(donor.createdBy?._id || donor.createdBy)) && (
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => openEditModal(donor)}
+                      title="Edit Donor"
+                      className="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(donor._id)}
+                      title="Delete Donor"
+                      className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-white/10 rounded-lg transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </div>
 
             </div>

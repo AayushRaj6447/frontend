@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Droplet, Users, HeartPulse, LogIn, LogOut, Lock, Menu, X, LayoutDashboard } from 'lucide-react';
+import { Droplet, Users, HeartPulse, LogIn, LogOut, Lock, Menu, X, LayoutDashboard, Sun, Moon } from 'lucide-react';
 
-export default function Navbar({ activeTab, setActiveTab, currentUser, onOpenAuth, onLogout }) {
+export default function Navbar({ activeTab, setActiveTab, currentUser, onOpenAuth, onLogout, theme, onToggleTheme }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleTabClick = (tab) => {
@@ -77,6 +77,20 @@ export default function Navbar({ activeTab, setActiveTab, currentUser, onOpenAut
 
         {/* Desktop Auth / User Actions & Mobile Hamburger */}
         <div className="flex items-center gap-2">
+          
+          {/* Theme Mode Toggle Button */}
+          <button
+            onClick={onToggleTheme}
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            className="p-2.5 rounded-xl glass-panel text-slate-300 hover:text-white transition-all transform active:scale-90 flex items-center justify-center"
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-4 h-4 text-amber-400" />
+            ) : (
+              <Moon className="w-4 h-4 text-indigo-600" />
+            )}
+          </button>
+
           {currentUser ? (
             <div className="hidden sm:flex items-center gap-3 pl-3 bg-dark-800/70 border border-white/10 rounded-full py-1 pr-1.5">
               <div className="flex items-center gap-2">

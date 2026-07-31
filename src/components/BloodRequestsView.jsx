@@ -274,22 +274,24 @@ export default function BloodRequestsView({ requests = [], onRefresh, currentUse
                   Active Request
                 </span>
 
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => openEditModal(req)}
-                    title="Edit Request"
-                    className="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
-                  >
-                    <Edit3 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(req._id)}
-                    title="Delete Request"
-                    className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-white/10 rounded-lg transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+                {currentUser && (String(currentUser._id) === String(req.createdBy?._id || req.createdBy)) && (
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => openEditModal(req)}
+                      title="Edit Request"
+                      className="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(req._id)}
+                      title="Delete Request"
+                      className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-white/10 rounded-lg transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </div>
 
             </div>
