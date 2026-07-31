@@ -103,25 +103,28 @@ export default function App() {
       <div className="fixed top-[-10%] left-[-10%] w-[45vw] h-[45vw] rounded-full bg-blood-600/10 blur-[130px] pointer-events-none animate-float-slow z-0" />
       <div className="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-blood-800/10 blur-[150px] pointer-events-none animate-float-slow z-0" style={{ animationDelay: '-3.5s' }} />
 
-      {/* Navigation Bar */}
-      <Navbar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        currentUser={currentUser}
-        onOpenAuth={() => setActiveTab('auth')}
-        onLogout={handleLogout}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-      />
+      {/* Navigation Bar - Only rendered when user is logged in */}
+      {currentUser && activeTab !== 'auth' && (
+        <Navbar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          currentUser={currentUser}
+          onOpenAuth={() => setActiveTab('auth')}
+          onLogout={handleLogout}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
+      )}
 
       {/* Main View Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 pt-4 pb-8 z-10 flex flex-col">
-        {activeTab === 'auth' ? (
+        {activeTab === 'auth' || !currentUser ? (
           <AuthView
             onAuthSuccess={handleAuthSuccess}
             showToast={showToast}
             onCancel={() => setActiveTab('dashboard')}
             theme={theme}
+            onToggleTheme={toggleTheme}
           />
         ) : (
           <>
@@ -158,17 +161,19 @@ export default function App() {
         )}
       </main>
 
-      {/* Footer (Pinned to bottom of content layout) */}
+      {/* Footer */}
       <footer className="mt-auto w-full border-t theme-border py-5 px-4 text-center text-xs theme-text-muted z-10 backdrop-blur-md">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div>
             <span className="font-bold theme-text-secondary">HemoVerse</span> &copy; 2026. Empowering healthcare with real-time blood logistics.
           </div>
-          <div className="flex items-center gap-4 theme-text-secondary">
-            <button onClick={() => setActiveTab('dashboard')} className="hover:underline">Dashboard</button>
-            <button onClick={() => setActiveTab('donors')} className="hover:underline">Donors</button>
-            <button onClick={() => setActiveTab('requests')} className="hover:underline">Blood Requests</button>
-          </div>
+          {currentUser && (
+            <div className="flex items-center gap-4 theme-text-secondary">
+              <button onClick={() => setActiveTab('dashboard')} className="hover:underline">Dashboard</button>
+              <button onClick={() => setActiveTab('donors')} className="hover:underline">Donors</button>
+              <button onClick={() => setActiveTab('requests')} className="hover:underline">Blood Requests</button>
+            </div>
+          )}
         </div>
       </footer>
 

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Mail, Lock, User, Upload, Sparkles, KeyRound, ArrowLeft, ShieldCheck, HeartPulse, AlertTriangle, Eye, EyeOff, LockKeyhole, Droplet, ArrowRight, UserPlus, LogIn } from 'lucide-react';
+import { Mail, Lock, User, Upload, Sparkles, KeyRound, ArrowLeft, ShieldCheck, HeartPulse, AlertTriangle, Eye, EyeOff, LockKeyhole, Droplet, ArrowRight, UserPlus, LogIn, Sun, Moon } from 'lucide-react';
 import { loginUserApi, registerUserApi, sendOtpApi, forgotPasswordSendOtpApi, resetPasswordApi } from '../services/api';
 
-export default function AuthView({ onAuthSuccess, showToast, theme }) {
+export default function AuthView({ onAuthSuccess, showToast, theme, onToggleTheme }) {
   const [isFlipped, setIsFlipped] = useState(false); // false = Sign In (Front), true = Register (Back)
   const [isForgotMode, setIsForgotMode] = useState(false);
   const [registerStep, setRegisterStep] = useState(1);
@@ -164,7 +164,38 @@ export default function AuthView({ onAuthSuccess, showToast, theme }) {
   };
 
   return (
-    <div className="w-full flex-1 flex items-center justify-center py-2 sm:py-6 px-1 sm:px-4">
+    <div className="w-full flex-1 flex flex-col items-center justify-center py-2 sm:py-6 px-1 sm:px-4 relative">
+      
+      {/* Top Header Logo & Theme Switcher for Standalone Auth Page */}
+      <div className="w-full max-w-4xl flex items-center justify-between mb-4 sm:mb-6 px-2">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blood-800 via-blood-600 to-blood-500 p-0.5 shadow-lg shadow-blood-900/30">
+            <div className="w-full h-full theme-card rounded-[14px] flex items-center justify-center">
+              <Droplet className="w-5 h-5 text-blood-500 fill-blood-500/20" />
+            </div>
+          </div>
+          <div>
+            <span className="text-2xl font-black tracking-tight text-gradient-blood">HemoVerse</span>
+            <span className="text-[10px] block font-extrabold text-blood-500 uppercase tracking-widest -mt-1">Emergency Platform</span>
+          </div>
+        </div>
+
+        {/* Theme Toggle Button */}
+        {onToggleTheme && (
+          <button
+            onClick={onToggleTheme}
+            title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            className="p-2.5 rounded-2xl glass-panel theme-text-primary hover:scale-105 active:scale-90 transition-all duration-300 shadow-sm flex items-center justify-center"
+          >
+            {theme === 'dark' ? (
+              <Sun className="w-4 h-4 text-amber-400" />
+            ) : (
+              <Moon className="w-4 h-4 text-indigo-600" />
+            )}
+          </button>
+        )}
+      </div>
+
       <div className="w-full max-w-4xl perspective-container">
         
         {/* 3D Animated Flip Container */}
