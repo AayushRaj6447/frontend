@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Lock, User, Upload, Sparkles, KeyRound, ArrowLeft, ShieldCheck, HeartPulse, AlertTriangle, Eye, EyeOff, LockKeyhole, Droplet, ArrowRight, UserPlus, LogIn } from 'lucide-react';
 import { loginUserApi, registerUserApi, sendOtpApi, forgotPasswordSendOtpApi, resetPasswordApi } from '../services/api';
 
-export default function AuthView({ onAuthSuccess, showToast }) {
+export default function AuthView({ onAuthSuccess, showToast, theme }) {
   const [isFlipped, setIsFlipped] = useState(false); // false = Sign In (Front), true = Register (Back)
   const [isForgotMode, setIsForgotMode] = useState(false);
   const [registerStep, setRegisterStep] = useState(1);
@@ -164,7 +164,7 @@ export default function AuthView({ onAuthSuccess, showToast }) {
   };
 
   return (
-    <div className="w-full min-h-[82vh] flex items-center justify-center py-6 px-2 sm:px-4">
+    <div className="w-full min-h-[calc(100vh-140px)] flex items-center justify-center py-4 px-2 sm:px-4">
       <div className="w-full max-w-4xl perspective-container">
         
         {/* 3D Animated Flip Container */}
@@ -174,21 +174,21 @@ export default function AuthView({ onAuthSuccess, showToast }) {
           {/* FRONT SIDE: SIGN IN PORTAL */}
           {/* ========================================================================= */}
           <div className="flip-card-front">
-            <div className="glass-panel-glow rounded-3xl overflow-hidden shadow-2xl border border-blood-500/30 grid grid-cols-1 md:grid-cols-12 min-h-[520px]">
+            <div className="glass-panel-glow rounded-3xl overflow-hidden shadow-2xl border theme-border grid grid-cols-1 md:grid-cols-12 min-h-[520px] transition-all">
               
               {/* Left Sub-Pane: Register Promo Banner */}
-              <div className="md:col-span-5 bg-gradient-to-br from-blood-800 via-blood-900 to-dark-950 p-8 flex flex-col justify-between text-white relative overflow-hidden">
+              <div className="md:col-span-5 bg-gradient-to-br from-blood-900 via-blood-950 to-dark-900 p-8 flex flex-col justify-between text-white relative overflow-hidden">
                 <div className="relative z-10 space-y-4">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-extrabold uppercase tracking-wider backdrop-blur-md">
                     <HeartPulse className="w-4 h-4 text-rose-300 animate-pulse" />
                     <span>HemoVerse Network</span>
                   </div>
 
-                  <h2 className="text-3xl font-black leading-tight tracking-tight">
+                  <h2 className="text-3xl sm:text-4xl font-black leading-tight tracking-tight">
                     Don't Have an Account Yet?
                   </h2>
 
-                  <p className="text-xs text-rose-100/80 leading-relaxed font-normal">
+                  <p className="text-xs sm:text-sm text-rose-100/80 leading-relaxed font-normal">
                     Join our emergency blood logistics network. Register as a donor or patient to post & fulfill emergency requests instantly.
                   </p>
                 </div>
@@ -197,7 +197,7 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                   <button
                     type="button"
                     onClick={() => { setIsFlipped(true); setIsForgotMode(false); setError(''); }}
-                    className="w-full py-3.5 px-6 rounded-2xl bg-white text-blood-900 font-extrabold text-sm shadow-xl hover:bg-slate-100 transition-all transform active:scale-95 flex items-center justify-center gap-2"
+                    className="w-full py-4 px-6 rounded-2xl bg-white text-blood-900 font-black text-sm shadow-xl hover:bg-slate-100 transition-all hover-lift flex items-center justify-center gap-2"
                   >
                     <UserPlus className="w-4 h-4" />
                     Register Account ➔
@@ -206,14 +206,14 @@ export default function AuthView({ onAuthSuccess, showToast }) {
               </div>
 
               {/* Right Sub-Pane: Sign In Form Credentials */}
-              <div className="md:col-span-7 p-6 sm:p-10 flex flex-col justify-between">
+              <div className="md:col-span-7 p-6 sm:p-10 flex flex-col justify-between theme-card">
                 <div>
-                  <div className="flex items-center justify-between mb-6 pb-3 border-b border-white/10">
+                  <div className="flex items-center justify-between mb-6 pb-4 border-b theme-border">
                     <div>
-                      <h2 className="text-2xl font-black text-slate-100">
+                      <h2 className="text-2xl sm:text-3xl font-black theme-text-primary">
                         {isForgotMode ? 'Password Reset' : 'Sign In to Portal'}
                       </h2>
-                      <p className="text-xs text-slate-400 mt-1">
+                      <p className="text-xs sm:text-sm theme-text-muted mt-1">
                         {isForgotMode ? 'Recover your account access' : 'Enter your registered credentials to manage requests.'}
                       </p>
                     </div>
@@ -222,7 +222,7 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                       <button
                         type="button"
                         onClick={() => { setIsForgotMode(true); setError(''); }}
-                        className="text-xs font-bold text-blood-400 hover:underline"
+                        className="text-xs font-black text-blood-500 hover:underline"
                       >
                         Forgot Password?
                       </button>
@@ -230,8 +230,8 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                   </div>
 
                   {error && (
-                    <div className="mb-4 p-3.5 rounded-xl bg-rose-950/80 border border-rose-500/50 text-rose-200 text-xs flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+                    <div className="mb-4 p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/40 text-rose-500 text-xs font-bold flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0" />
                       <span>{error}</span>
                     </div>
                   )}
@@ -240,36 +240,36 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                     /* SIGN IN FORM */
                     <form onSubmit={handleLoginSubmit} className="space-y-4">
                       <div>
-                        <label className="block text-xs font-extrabold uppercase text-slate-400 mb-1.5">Email Address *</label>
+                        <label className="block text-xs font-black uppercase tracking-wider theme-text-muted mb-1.5">Email Address *</label>
                         <div className="relative">
-                          <Mail className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+                          <Mail className="absolute left-3.5 top-3.5 w-4 h-4 theme-text-muted" />
                           <input
                             type="email"
                             required
                             placeholder="user@example.com"
                             value={loginData.email}
                             onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                            className="w-full pl-10 pr-4 py-3 rounded-xl glass-input text-sm font-medium"
+                            className="w-full pl-10 pr-4 py-3 rounded-2xl glass-input text-sm font-semibold"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-xs font-extrabold uppercase text-slate-400 mb-1.5">Password *</label>
+                        <label className="block text-xs font-black uppercase tracking-wider theme-text-muted mb-1.5">Password *</label>
                         <div className="relative">
-                          <Lock className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+                          <Lock className="absolute left-3.5 top-3.5 w-4 h-4 theme-text-muted" />
                           <input
                             type={showPassword ? 'text' : 'password'}
                             required
                             placeholder="••••••••"
                             value={loginData.password}
                             onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                            className="w-full pl-10 pr-10 py-3 rounded-xl glass-input text-sm font-medium"
+                            className="w-full pl-10 pr-10 py-3 rounded-2xl glass-input text-sm font-semibold"
                           />
                           <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-3.5 top-3.5 text-slate-400 hover:text-white"
+                            className="absolute right-3.5 top-3.5 theme-text-muted hover:theme-text-primary"
                           >
                             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                           </button>
@@ -279,7 +279,7 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full mt-4 py-3.5 rounded-2xl bg-gradient-to-r from-blood-600 to-blood-500 hover:from-blood-500 text-white font-black text-sm shadow-xl shadow-blood-950/80 transition-all transform active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
+                        className="w-full mt-4 py-4 rounded-2xl bg-gradient-to-r from-blood-600 to-blood-500 hover:from-blood-500 text-white font-black text-sm shadow-xl shadow-blood-950/40 transition-all hover-lift flex items-center justify-center gap-2 disabled:opacity-50"
                       >
                         {loading ? (
                           <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -297,14 +297,14 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                       {forgotStep === 1 ? (
                         <form onSubmit={handleForgotSendOtp} className="space-y-4">
                           <div>
-                            <label className="block text-xs font-extrabold uppercase text-slate-400 mb-1.5">Registered Email Address</label>
+                            <label className="block text-xs font-black uppercase theme-text-muted mb-1.5">Registered Email Address</label>
                             <input
                               type="email"
                               required
                               placeholder="user@example.com"
                               value={forgotEmail}
                               onChange={(e) => setForgotEmail(e.target.value)}
-                              className="w-full px-4 py-3 rounded-xl glass-input text-sm font-medium"
+                              className="w-full px-4 py-3 rounded-2xl glass-input text-sm font-medium"
                             />
                           </div>
 
@@ -312,14 +312,14 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                             <button
                               type="button"
                               onClick={() => setIsForgotMode(false)}
-                              className="px-4 py-3 rounded-xl glass-panel text-slate-300 text-xs font-extrabold hover:text-white"
+                              className="px-4 py-3 rounded-2xl glass-panel theme-text-secondary text-xs font-black hover:theme-text-primary"
                             >
                               Back
                             </button>
                             <button
                               type="submit"
                               disabled={loading}
-                              className="flex-1 py-3.5 rounded-xl bg-blood-600 text-white font-extrabold text-xs sm:text-sm shadow-lg flex items-center justify-center gap-2"
+                              className="flex-1 py-3.5 rounded-2xl bg-blood-600 text-white font-black text-xs sm:text-sm shadow-lg flex items-center justify-center gap-2"
                             >
                               {loading ? 'Sending OTP...' : 'Send Reset Code'}
                             </button>
@@ -328,7 +328,7 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                       ) : (
                         <form onSubmit={handleResetPassword} className="space-y-4">
                           <div>
-                            <label className="block text-xs font-extrabold text-slate-400 mb-1">6-Digit Reset Code *</label>
+                            <label className="block text-xs font-black theme-text-muted mb-1">6-Digit Reset Code *</label>
                             <input
                               type="text"
                               maxLength="6"
@@ -336,19 +336,19 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                               placeholder="123456"
                               value={forgotOtp}
                               onChange={(e) => setForgotOtp(e.target.value)}
-                              className="w-full text-center text-xl font-mono tracking-widest py-2.5 rounded-xl glass-input text-amber-400"
+                              className="w-full text-center text-xl font-mono tracking-widest py-2.5 rounded-2xl glass-input text-amber-500 font-bold"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-xs font-extrabold text-slate-400 mb-1">New Password *</label>
+                            <label className="block text-xs font-black theme-text-muted mb-1">New Password *</label>
                             <input
                               type="password"
                               required
                               placeholder="••••••••"
                               value={newPassword}
                               onChange={(e) => setNewPassword(e.target.value)}
-                              className="w-full px-4 py-2.5 rounded-xl glass-input text-sm"
+                              className="w-full px-4 py-2.5 rounded-2xl glass-input text-sm font-semibold"
                             />
                           </div>
 
@@ -356,14 +356,14 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                             <button
                               type="button"
                               onClick={() => setForgotStep(1)}
-                              className="px-4 py-3 rounded-xl glass-panel text-slate-300 text-xs font-extrabold hover:text-white"
+                              className="px-4 py-3 rounded-2xl glass-panel theme-text-secondary text-xs font-black hover:theme-text-primary"
                             >
                               Back
                             </button>
                             <button
                               type="submit"
                               disabled={loading}
-                              className="flex-1 py-3.5 rounded-xl bg-blood-600 text-white font-extrabold text-xs sm:text-sm shadow-lg flex items-center justify-center gap-2"
+                              className="flex-1 py-3.5 rounded-2xl bg-blood-600 text-white font-black text-xs sm:text-sm shadow-lg flex items-center justify-center gap-2"
                             >
                               {loading ? 'Resetting...' : 'Reset & Sign In'}
                             </button>
@@ -383,19 +383,19 @@ export default function AuthView({ onAuthSuccess, showToast }) {
           {/* BACK SIDE: REGISTER PORTAL (FLIPPED 180 DEG) */}
           {/* ========================================================================= */}
           <div className="flip-card-back">
-            <div className="glass-panel-glow rounded-3xl overflow-hidden shadow-2xl border border-blood-500/30 grid grid-cols-1 md:grid-cols-12 min-h-[520px]">
+            <div className="glass-panel-glow rounded-3xl overflow-hidden shadow-2xl border theme-border grid grid-cols-1 md:grid-cols-12 min-h-[520px] transition-all">
               
               {/* Left Sub-Pane: Credentials Form for Registration */}
-              <div className="md:col-span-7 p-6 sm:p-10 flex flex-col justify-between order-2 md:order-1">
+              <div className="md:col-span-7 p-6 sm:p-10 flex flex-col justify-between theme-card order-2 md:order-1">
                 <div>
-                  <div className="mb-4 pb-3 border-b border-white/10">
-                    <h2 className="text-2xl font-black text-slate-100">Create New Account</h2>
-                    <p className="text-xs text-slate-400 mt-1">Register to start requesting and donating blood.</p>
+                  <div className="mb-4 pb-3 border-b theme-border">
+                    <h2 className="text-2xl sm:text-3xl font-black theme-text-primary">Create New Account</h2>
+                    <p className="text-xs sm:text-sm theme-text-muted mt-1">Register to start requesting and donating blood.</p>
                   </div>
 
                   {error && (
-                    <div className="mb-3 p-3 rounded-xl bg-rose-950/80 border border-rose-500/50 text-rose-200 text-xs flex items-center gap-2">
-                      <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+                    <div className="mb-3 p-3 rounded-2xl bg-rose-500/10 border border-rose-500/40 text-rose-500 text-xs font-bold flex items-center gap-2">
+                      <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0" />
                       <span>{error}</span>
                     </div>
                   )}
@@ -404,65 +404,65 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                     <form onSubmit={handleRequestRegisterOtp} className="space-y-3">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
-                          <label className="block text-xs font-extrabold text-slate-400 mb-1">First Name *</label>
+                          <label className="block text-xs font-black theme-text-muted mb-1">First Name *</label>
                           <input
                             type="text"
                             required
                             placeholder="John"
                             value={registerData.firstName}
                             onChange={(e) => setRegisterData({ ...registerData, firstName: e.target.value })}
-                            className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs font-medium"
+                            className="w-full px-3.5 py-2.5 rounded-2xl glass-input text-xs font-semibold"
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-extrabold text-slate-400 mb-1">Last Name</label>
+                          <label className="block text-xs font-black theme-text-muted mb-1">Last Name</label>
                           <input
                             type="text"
                             placeholder="Doe"
                             value={registerData.lastName}
                             onChange={(e) => setRegisterData({ ...registerData, lastName: e.target.value })}
-                            className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs font-medium"
+                            className="w-full px-3.5 py-2.5 rounded-2xl glass-input text-xs font-semibold"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-xs font-extrabold text-slate-400 mb-1">Email Address *</label>
+                        <label className="block text-xs font-black theme-text-muted mb-1">Email Address *</label>
                         <input
                           type="email"
                           required
                           placeholder="john@example.com"
                           value={registerData.email}
                           onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
-                          className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs font-medium"
+                          className="w-full px-3.5 py-2.5 rounded-2xl glass-input text-xs font-semibold"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-extrabold text-slate-400 mb-1">Password *</label>
+                        <label className="block text-xs font-black theme-text-muted mb-1">Password *</label>
                         <input
                           type="password"
                           required
                           placeholder="••••••••"
                           value={registerData.password}
                           onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
-                          className="w-full px-3.5 py-2.5 rounded-xl glass-input text-xs font-medium"
+                          className="w-full px-3.5 py-2.5 rounded-2xl glass-input text-xs font-semibold"
                         />
                       </div>
 
                       {/* Avatar Upload */}
                       <div>
-                        <label className="block text-xs font-extrabold text-slate-400 mb-1">Profile Photo *</label>
+                        <label className="block text-xs font-black theme-text-muted mb-1">Profile Photo *</label>
                         <div className="flex items-center gap-3">
                           {avatarPreview ? (
-                            <img src={avatarPreview} alt="Avatar" className="w-10 h-10 rounded-xl object-cover border-2 border-blood-500 shrink-0" />
+                            <img src={avatarPreview} alt="Avatar" className="w-10 h-10 rounded-2xl object-cover border-2 border-blood-500 shrink-0" />
                           ) : (
-                            <div className="w-10 h-10 rounded-xl bg-dark-800 border border-slate-700 flex items-center justify-center text-slate-500 shrink-0">
+                            <div className="w-10 h-10 rounded-2xl glass-panel border theme-border flex items-center justify-center theme-text-muted shrink-0">
                               <User className="w-5 h-5" />
                             </div>
                           )}
-                          <label className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-dashed border-blood-500/50 hover:border-blood-500 bg-blood-950/20 text-slate-300 text-xs font-bold truncate">
-                            <Upload className="w-4 h-4 text-blood-400 shrink-0" />
+                          <label className="flex-1 cursor-pointer flex items-center justify-center gap-2 px-3 py-2 rounded-2xl border border-dashed border-blood-500/40 hover:border-blood-500 bg-blood-500/10 theme-text-secondary text-xs font-extrabold truncate">
+                            <Upload className="w-4 h-4 text-blood-500 shrink-0" />
                             <span className="truncate">{avatarFile ? avatarFile.name : 'Choose Avatar Image'}</span>
                             <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
                           </label>
@@ -472,20 +472,20 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full mt-3 py-3 rounded-2xl bg-gradient-to-r from-blood-600 to-blood-500 text-white font-black text-xs sm:text-sm shadow-xl flex items-center justify-center gap-2"
+                        className="w-full mt-3 py-3.5 rounded-2xl bg-gradient-to-r from-blood-600 to-blood-500 text-white font-black text-xs sm:text-sm shadow-xl hover-lift flex items-center justify-center gap-2"
                       >
                         {loading ? 'Sending OTP Code...' : 'Send 6-Digit Email OTP ➔'}
                       </button>
                     </form>
                   ) : (
                     <form onSubmit={handleCompleteRegister} className="space-y-4 text-center">
-                      <div className="w-12 h-12 rounded-2xl bg-blood-950/90 border border-blood-500/50 mx-auto flex items-center justify-center text-blood-400 shadow-lg">
+                      <div className="w-12 h-12 rounded-2xl bg-blood-500/20 border border-blood-500/40 mx-auto flex items-center justify-center text-blood-500 shadow-lg">
                         <KeyRound className="w-6 h-6" />
                       </div>
                       <div>
-                        <h3 className="text-base font-black text-slate-100">Verify Email Address</h3>
-                        <p className="text-xs text-slate-400 mt-1">
-                          Enter the 6-digit OTP code sent to <strong className="text-blood-400">{registerData.email}</strong>
+                        <h3 className="text-base sm:text-lg font-black theme-text-primary">Verify Email Address</h3>
+                        <p className="text-xs theme-text-muted mt-1">
+                          Enter the 6-digit OTP code sent to <strong className="text-blood-500">{registerData.email}</strong>
                         </p>
                       </div>
                       <input
@@ -495,20 +495,20 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                         placeholder="123456"
                         value={registerData.otp}
                         onChange={(e) => setRegisterData({ ...registerData, otp: e.target.value })}
-                        className="w-full text-center text-2xl font-mono font-black tracking-widest py-3 rounded-xl glass-input text-blood-300"
+                        className="w-full text-center text-2xl font-mono font-black tracking-widest py-3 rounded-2xl glass-input text-blood-500"
                       />
                       <div className="flex gap-2">
                         <button
                           type="button"
                           onClick={() => setRegisterStep(1)}
-                          className="px-4 py-2.5 rounded-xl glass-panel text-xs font-extrabold text-slate-300 hover:text-white"
+                          className="px-4 py-2.5 rounded-2xl glass-panel text-xs font-black theme-text-secondary hover:theme-text-primary"
                         >
                           Back
                         </button>
                         <button
                           type="submit"
                           disabled={loading}
-                          className="flex-1 py-3 rounded-xl bg-blood-600 text-white font-black text-xs shadow-lg"
+                          className="flex-1 py-3 rounded-2xl bg-blood-600 text-white font-black text-xs shadow-lg"
                         >
                           {loading ? 'Verifying...' : 'Verify OTP & Register'}
                         </button>
@@ -522,16 +522,16 @@ export default function AuthView({ onAuthSuccess, showToast }) {
               {/* Right Sub-Pane: Already Have Account Promo Banner */}
               <div className="md:col-span-5 bg-gradient-to-bl from-blood-900 via-blood-950 to-dark-950 p-8 flex flex-col justify-between text-white relative overflow-hidden order-1 md:order-2">
                 <div className="relative z-10 space-y-4">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-md">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-extrabold uppercase tracking-wider backdrop-blur-md">
                     <ShieldCheck className="w-4 h-4 text-emerald-400" />
                     <span>Member Access</span>
                   </div>
 
-                  <h2 className="text-3xl font-black leading-tight tracking-tight">
+                  <h2 className="text-3xl sm:text-4xl font-black leading-tight tracking-tight">
                     Already Have an Account?
                   </h2>
 
-                  <p className="text-xs text-rose-100/80 leading-relaxed font-normal">
+                  <p className="text-xs sm:text-sm text-rose-100/80 leading-relaxed font-normal">
                     Sign in with your existing email and password to view your active blood requests and manage donor listings.
                   </p>
                 </div>
@@ -540,7 +540,7 @@ export default function AuthView({ onAuthSuccess, showToast }) {
                   <button
                     type="button"
                     onClick={() => { setIsFlipped(false); setIsForgotMode(false); setError(''); }}
-                    className="w-full py-3.5 px-6 rounded-2xl bg-white text-blood-950 font-extrabold text-sm shadow-xl hover:bg-slate-100 transition-all transform active:scale-95 flex items-center justify-center gap-2"
+                    className="w-full py-4 px-6 rounded-2xl bg-white text-blood-950 font-black text-sm shadow-xl hover:bg-slate-100 transition-all hover-lift flex items-center justify-center gap-2"
                   >
                     <LogIn className="w-4 h-4" />
                     Flip to Sign In ➔
