@@ -4,14 +4,25 @@ import { addBloodRequestApi, editBloodRequestApi, removeBloodRequestApi } from '
 
 const URGENCY_LEVELS = ['All', 'Critical', 'High', 'Medium', 'Low'];
 
-// Helper to reliably check item ownership
+// Helper to safely extract user ID regardless of object nesting
+const getUserId = (userObj) => {
+  if (!userObj) return null;
+  if (typeof userObj === 'string') return userObj;
+  return userObj._id || userObj.id || userObj.userId || userObj.user?._id || userObj.user?.id || null;
+};
+
+// Bulletproof Ownership Checker
 const checkIsOwner = (currentUser, item) => {
   if (!currentUser || !item) return false;
-  const currentUserId = currentUser._id || currentUser.id || currentUser.userId;
-  const creator = item.createdBy;
-  const creatorId = creator?._id || creator?.id || (typeof creator === 'string' ? creator : null);
   
-  if (!currentUserId || !creatorId) return false;
+  const currentUserId = getUserId(currentUser);
+  const creatorId = getUserId(item.createdBy) || getUserId(item.user);
+  
+  // Both IDs MUST exist and MUST NOT be 'undefined' string literal
+  if (!currentUserId || !creatorId || String(currentUserId) === 'undefined' || String(creatorId) === 'undefined') {
+    return false;
+  }
+  
   return String(currentUserId) === String(creatorId);
 };
 
