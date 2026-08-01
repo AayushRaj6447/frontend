@@ -4,6 +4,7 @@ import DashboardView from './components/DashboardView';
 import DonorsView from './components/DonorsView';
 import BloodRequestsView from './components/BloodRequestsView';
 import AuthView from './components/AuthView';
+import ProfileView from './components/ProfileView';
 import Toast from './components/Toast';
 import SplashScreen from './components/SplashScreen';
 import { getAllDonorsApi, getAllBloodRequestsApi, logoutUserApi } from './services/api';
@@ -157,6 +158,20 @@ export default function App() {
                 onOpenAuth={() => setActiveTab('auth')}
               />
             )}
+
+            {activeTab === 'profile' && (
+              <ProfileView
+                currentUser={currentUser}
+                donors={donors}
+                requests={requests}
+                onRefresh={fetchData}
+                showToast={showToast}
+                onNavigate={(tab) => setActiveTab(tab)}
+                onLogout={handleLogout}
+                theme={theme}
+                onToggleTheme={toggleTheme}
+              />
+            )}
           </>
         )}
       </main>
@@ -172,6 +187,7 @@ export default function App() {
               <button onClick={() => setActiveTab('dashboard')} className="hover:underline">Dashboard</button>
               <button onClick={() => setActiveTab('donors')} className="hover:underline">Donors</button>
               <button onClick={() => setActiveTab('requests')} className="hover:underline">Blood Requests</button>
+              <button onClick={() => setActiveTab('profile')} className="hover:underline font-bold text-blood-500">My Profile</button>
             </div>
           )}
         </div>

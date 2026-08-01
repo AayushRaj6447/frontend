@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Droplet, Users, HeartPulse, LogIn, LogOut, Lock, Menu, X, LayoutDashboard, Sun, Moon } from 'lucide-react';
+import { Droplet, Users, HeartPulse, LogIn, LogOut, Lock, Menu, X, LayoutDashboard, Sun, Moon, User } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, currentUser, onOpenAuth, onLogout, theme, onToggleTheme }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -66,6 +66,20 @@ export default function Navbar({ activeTab, setActiveTab, currentUser, onOpenAut
             <HeartPulse className="w-4 h-4" />
             Blood Requests
           </button>
+
+          {currentUser && (
+            <button
+              onClick={() => handleTabClick('profile')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all duration-300 ${
+                activeTab === 'profile'
+                  ? 'bg-gradient-to-r from-blood-700 to-blood-600 text-white shadow-lg shadow-blood-900/40 scale-[1.02]'
+                  : 'theme-text-muted hover:theme-text-primary hover:bg-blood-500/10'
+              }`}
+            >
+              <User className="w-4 h-4" />
+              My Profile
+            </button>
+          )}
         </nav>
 
         {/* Desktop Auth / User Actions & Theme Toggle */}
@@ -86,22 +100,26 @@ export default function Navbar({ activeTab, setActiveTab, currentUser, onOpenAut
 
           {currentUser ? (
             <div className="hidden sm:flex items-center gap-3 pl-3 glass-panel border theme-border rounded-full py-1 pr-1.5 shadow-sm">
-              <div className="flex items-center gap-2">
+              <button
+                onClick={() => handleTabClick('profile')}
+                title="View My Profile"
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer group"
+              >
                 {currentUser.avatar ? (
                   <img
                     src={currentUser.avatar}
                     alt={currentUser.firstName}
-                    className="w-8 h-8 rounded-full object-cover border border-blood-500/60 shadow-md"
+                    className="w-8 h-8 rounded-full object-cover border border-blood-500/60 shadow-md group-hover:border-blood-500"
                   />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-blood-700 text-white flex items-center justify-center text-xs font-black">
+                  <div className="w-8 h-8 rounded-full bg-blood-700 text-white flex items-center justify-center text-xs font-black group-hover:bg-blood-600">
                     {currentUser.firstName?.[0] || 'U'}
                   </div>
                 )}
-                <span className="text-xs sm:text-sm font-extrabold theme-text-primary">
+                <span className="text-xs sm:text-sm font-extrabold theme-text-primary group-hover:text-blood-500 transition-colors">
                   {currentUser.firstName}
                 </span>
-              </div>
+              </button>
               <button
                 onClick={onLogout}
                 title="Logout"
@@ -165,9 +183,24 @@ export default function Navbar({ activeTab, setActiveTab, currentUser, onOpenAut
             Blood Requests
           </button>
 
+          {currentUser && (
+            <button
+              onClick={() => handleTabClick('profile')}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-extrabold ${
+                activeTab === 'profile' ? 'bg-blood-600 text-white' : 'theme-text-secondary hover:bg-blood-500/10'
+              }`}
+            >
+              <User className="w-4 h-4" />
+              My Profile
+            </button>
+          )}
+
           {currentUser ? (
             <div className="pt-2 border-t theme-border flex items-center justify-between px-4 py-2">
-              <div className="flex items-center gap-2">
+              <button
+                onClick={() => handleTabClick('profile')}
+                className="flex items-center gap-2 text-left"
+              >
                 {currentUser.avatar ? (
                   <img src={currentUser.avatar} alt={currentUser.firstName} className="w-7 h-7 rounded-full object-cover border border-blood-500" />
                 ) : (
@@ -175,8 +208,10 @@ export default function Navbar({ activeTab, setActiveTab, currentUser, onOpenAut
                     {currentUser.firstName?.[0] || 'U'}
                   </div>
                 )}
-                <span className="text-sm font-bold theme-text-primary">{currentUser.firstName}</span>
-              </div>
+                <span className="text-sm font-bold theme-text-primary hover:text-blood-500 transition-colors">
+                  {currentUser.firstName} (My Profile)
+                </span>
+              </button>
               <button
                 onClick={() => { onLogout(); setMobileMenuOpen(false); }}
                 className="px-3 py-1.5 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-500 text-xs font-bold flex items-center gap-1"
